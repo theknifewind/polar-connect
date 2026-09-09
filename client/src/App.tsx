@@ -164,7 +164,7 @@ function SearchField({ value, onChange, onSubmit, placeholder = "Search reports,
   </form>;
 }
 
-function Tag({ children, className }: { children: React.ReactNode; className?: string }) { return <span className={cx("inline-flex items-center border-l-2 border-current/45 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em]", className)}>{children}</span>; }
+function Tag({ children, className }: { children: React.ReactNode; className?: string }) { return <span className={cx("inline-flex items-center gap-1.5 rounded-[0.45rem] border border-current/15 px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.14em] shadow-[inset_0_1px_0_rgba(255,255,255,.18)]", className)}><span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-70" aria-hidden="true" />{children}</span>; }
 
 function RecordCard({ item, saved, onSave, compact = false }: { item: (typeof repositoryItems)[number]; saved?: boolean; onSave?: () => void; compact?: boolean }) {
   return <article className={cx("group relative overflow-hidden rounded-[1.5rem] border border-[#dbe7ec] bg-white transition duration-300 hover:-translate-y-1 hover:border-cyan-200", shadowCard, compact ? "p-5" : "p-6")}>
