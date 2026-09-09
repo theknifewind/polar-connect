@@ -85,8 +85,8 @@ const cx = (...values: Array<string | false | null | undefined>) => values.filte
 function Logo({ dark = false }: { dark?: boolean }) {
   return (
     <Link href="/" className="group inline-flex items-center gap-3" aria-label="POLARIS home">
-      <span className={cx("grid h-10 w-10 place-items-center overflow-hidden rounded-xl border shadow-sm transition duration-300 group-hover:-rotate-3 group-hover:scale-105", dark ? "border-white/80 bg-white" : "border-[#dbe7ec] bg-[#f4f8fb]")}>
-        <img src="/manus-storage/polaris-mark-clean_2aeb09ee.png" alt="" className="h-9 w-9 object-contain" />
+      <span className="grid h-10 w-10 place-items-center transition duration-300 group-hover:-rotate-3 group-hover:scale-105">
+        <img src="/manus-storage/polaris-mark-transparent_1ca83e64.png" alt="" className="h-10 w-10 object-contain" />
       </span>
       <span className="leading-none">
         <span className={cx("block font-display text-lg font-semibold tracking-[-0.05em]", dark ? "text-white" : "text-[#102333]")}>POLARIS</span>
@@ -282,15 +282,11 @@ function ExplorerMap({ preview = false }: { preview?: boolean }) {
   const station = getStation(selected);
   return <div className={cx("relative overflow-hidden rounded-[1.5rem] bg-[radial-gradient(circle_at_50%_44%,rgba(39,198,217,.16),transparent_22%),linear-gradient(135deg,#0b2439,#071525)]", preview ? "min-h-[410px]" : "min-h-[560px]")}>
     <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(180,230,239,.12)_1px,transparent_1px),linear-gradient(90deg,rgba(180,230,239,.12)_1px,transparent_1px)] [background-size:44px_44px]" />
-    <div className="absolute left-[14%] top-[28%] h-[35%] w-[72%] rounded-[50%] border border-cyan-200/15 bg-white/[.02] blur-[1px]" />
-    <div className="absolute left-[23%] top-[42%] h-[28%] w-[55%] rounded-[50%] border border-cyan-200/20" />
     <div className="absolute left-[36%] top-[51%] h-[20%] w-[30%] rounded-[50%] bg-[#eafcff] shadow-[0_0_90px_rgba(39,198,217,.3)]" />
     <div className="absolute left-[29%] top-[58%] h-[14%] w-[12%] rotate-12 rounded-[48%] bg-[#d9f5fa]" />
     <div className="absolute left-[52%] top-[52%] h-[11%] w-[23%] -rotate-12 rounded-[48%] bg-[#d9f5fa]" />
     <div className="absolute left-[66%] top-[36%] h-[7%] w-[8%] rotate-12 rounded-[48%] bg-[#d9f5fa]" />
     <div className="absolute left-[74%] top-[15%] h-[5%] w-[7%] -rotate-12 rounded-[48%] bg-[#d9f5fa]" />
-    <div className="pointer-events-none absolute left-[16%] top-[28%] h-[42%] w-[68%] rounded-[50%] border border-dashed border-cyan-200/25" />
-    <div className="pointer-events-none absolute left-[34%] top-[44%] h-px w-[38%] rotate-[-18deg] border-t border-dashed border-amber-300/35" />
     {stations.map((item) => <button key={item.id} onClick={() => setSelected(item.id)} className="group absolute z-10 -translate-x-1/2 -translate-y-1/2" style={stationCoordinates[item.id]} aria-label={`View ${item.name} station`}><span className={cx("relative mx-auto block h-4 w-4 rounded-full border-2 border-[#071525] transition duration-200 after:absolute after:left-1/2 after:top-1/2 after:h-10 after:w-10 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:border after:border-cyan-200/30 after:content-[''] group-hover:scale-110", selected === item.id ? "bg-[#27c6d9] shadow-[0_0_0_5px_rgba(39,198,217,.18)]" : item.color === "amber" ? "bg-[#ffb547]" : item.color === "violet" ? "bg-[#b5a0ff]" : "bg-[#9feaf2]")} /><span className={cx("mt-3 block whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.16em] transition", selected === item.id ? "text-white" : "text-white/40 group-hover:text-white/80")}>{item.name}</span></button>)}
     <div className="absolute left-5 top-5 z-20 max-w-xs md:left-8 md:top-8"><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-200/70">Polar explorer</p><p className="mt-3 max-w-[175px] font-display text-xl font-semibold leading-tight tracking-[-0.05em] text-white md:max-w-[220px] md:text-2xl">Three stations. One connected system.</p></div>
     <div className="absolute bottom-4 left-4 right-4 z-20 grid gap-3 border-l-2 border-cyan-300 bg-[#071525]/90 p-4 pl-5 backdrop-blur-xl md:bottom-6 md:left-6 md:right-auto md:w-[360px]"><div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200">{station.name} · {station.region}</p><p className="mt-2 font-display text-xl font-semibold text-white">{station.description}</p></div><span className="font-display text-2xl text-white/20">{station.number}</span></div><div className="flex flex-wrap gap-x-3 gap-y-1 border-t border-white/10 pt-3">{station.facts.map((fact) => <span key={fact} className="text-[10px] text-white/55">{fact}</span>)}</div></div>
