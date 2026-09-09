@@ -83,7 +83,7 @@ export const outreachChannels = [
   { id: "instagram", label: "Instagram", icon: "◎", content: "What does a polar expedition actually study? Ice. Air. Ocean. Life. And the connections between them. Follow the field notes from India’s 43rd Antarctic Expedition." },
   { id: "x", label: "X post", icon: "𝕏", content: "India’s 43rd Antarctic Expedition turns field observations into climate knowledge — from snow and ice to atmosphere and life around Maitri Station." },
   { id: "education", label: "Educational post", icon: "✦", content: "Did you know? Snow can store clues about Antarctica’s climate. During India’s 43rd Antarctic Expedition, researchers observed the ice, air and landscape to understand how polar systems are changing." },
-  { id: "newsletter", label: "Newsletter", icon: "✉", content: "This month from the poles: field observations from Maitri, a new look at Southern Ocean carbon flux, and a beginner’s guide to the science of ice. Read, learn and explore with POLARIS." },
+  { id: "newsletter", label: "Newsletter", icon: "✉", content: "This month from the poles: field observations from Maitri, a new look at Southern Ocean carbon flux, and a beginner’s guide to the science of ice. Read, learn and explore with Polar Connect." },
 ];
 
 export const promptChips = ["Indian Antarctic expeditions 2018–2024", "What happens at Maitri?", "Explain polar science for Class 10"];
@@ -104,8 +104,8 @@ export const colorForType: Record<ContentType, string> = { Report: "bg-cyan-100 
 export const studioSteps = ["Uploaded", "Analysed", "Drafted", "Review", "Approved"] as const;
 export const statusCopy: Record<(typeof studioSteps)[number], string> = { Uploaded: "Source record received", Analysed: "Metadata extracted", Drafted: "Channels generated", Review: "Awaiting human review", Approved: "Ready for publishing" };
 export const homeTitle = "The poles are telling a story. Start listening.";
-export const homeDescription = "POLARIS brings expeditions, evidence, field notes and learning into one intelligent public space — built for researchers, students and everyone curious about our changing planet.";
-export const assistantDescription = "Ask a question in plain language. POLARIS retrieves from the repository, explains the answer, and shows you the source.";
+export const homeDescription = "Polar Connect brings expeditions, evidence, field notes and learning into one intelligent public space — built for researchers, students and everyone curious about our changing planet.";
+export const assistantDescription = "Ask a question in plain language. Polar Connect retrieves from the repository, explains the answer, and shows you the source.";
 export const repositoryDescription = "Browse the growing public record of India’s polar research — from expedition reports to classroom-ready explainers.";
 export const learnDescription = "Turn complex polar science into clear lessons, visual explainers and small wins you can remember.";
 export const explorerDescription = "Follow India’s stations and expedition routes across the high latitudes.";
@@ -113,8 +113,8 @@ export const mediaDescription = "Field notes, stories and visual dispatches from
 export const studioDescription = "Turn one trusted source into clear, review-ready content for every channel.";
 export const aboutDescription = "A public knowledge and outreach layer for India’s polar science ecosystem.";
 export const appDescription = "An AI-powered polar science knowledge and outreach platform for NCPOR.";
-export const copyright = "© 2026 POLARIS · NCPOR / Ministry of Earth Sciences";
-export const demoNotice = "Demo content · Connect institutional APIs for live records";
+export const copyright = "© 2026 Polar Connect · NCPOR / Ministry of Earth Sciences";
+export const demoNotice = "Demo records mapped to NCPOR themes · Connect institutional APIs for live records";
 export const shadowCard = "shadow-[0_16px_48px_rgba(8,28,45,0.08)]";
 export const sectionTitleClass = "font-display text-3xl font-semibold tracking-[-0.04em] text-[#102333] md:text-5xl";
 export const eyebrowClass = "text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-700";
