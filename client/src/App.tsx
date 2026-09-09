@@ -1,42 +1,333 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+import { useEffect, useMemo, useState } from "react";
+import { Link, Route, Switch, useLocation } from "wouter";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  BookOpen,
+  Bookmark,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  CircleDot,
+  Clock3,
+  Compass,
+  Copy,
+  Database,
+  ExternalLink,
+  FileText,
+  Filter,
+  GraduationCap,
+  Layers3,
+  MapPin,
+  Menu,
+  MessageCircle,
+  MoreHorizontal,
+  Newspaper,
+  Play,
+  Radio,
+  RefreshCcw,
+  Search,
+  Send,
+  SlidersHorizontal,
+  Sparkles,
+  X,
+} from "lucide-react";
+import {
+  allRegions,
+  allTopics,
+  assistantAnswer,
+  bodyCopyClass,
+  colorForType,
+  cn,
+  contentTypes,
+  copyright,
+  demoNotice,
+  explorerDescription,
+  featuredExpedition,
+  footerLinks,
+  getItem,
+  getMedia,
+  getStation,
+  getTopic,
+  heroImage,
+  homeDescription,
+  homeTitle,
+  iconForType,
+  institution,
+  latestItems,
+  learningTopics,
+  mediaDescription,
+  mediaStories,
+  navItems,
+  promptChips,
+  quizQuestions,
+  recommendedLearning,
+  repositoryDescription,
+  repositoryItems,
+  sectionTitleClass,
+  shadowCard,
+  stats,
+  stationCoordinates,
+  stations,
+  statusCopy,
+  studioDescription,
+  studioSteps,
+  topicColorMap,
+  outreachChannels,
+  assistantDescription,
+  learnDescription,
+  aboutDescription,
+} from "./data/polaris";
 
+const cx = (...values: Array<string | false | null | undefined>) => values.filter(Boolean).join(" ");
 
-function Router() {
+function Logo({ dark = false }: { dark?: boolean }) {
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <Link href="/" className="group inline-flex items-center gap-3" aria-label="POLARIS home">
+      <span className={cx("grid h-9 w-9 place-items-center rounded-xl text-sm font-bold shadow-sm transition group-hover:rotate-6", dark ? "bg-white text-[#071525]" : "bg-[#102333] text-white")}>
+        P
+      </span>
+      <span className="leading-none">
+        <span className={cx("block font-display text-lg font-semibold tracking-[-0.05em]", dark ? "text-white" : "text-[#102333]")}>POLARIS</span>
+        <span className={cx("mt-1 block text-[9px] font-semibold uppercase tracking-[0.18em]", dark ? "text-cyan-200/70" : "text-[#738792]")}>Polar knowledge, made human.</span>
+      </span>
+    </Link>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
+function Header() {
+  const [location] = useLocation();
+  const [open, setOpen] = useState(false);
+  const dark = location === "/" || ["/assistant", "/explorer", "/studio"].some((path) => location.startsWith(path));
+  return (
+    <header className={cx("absolute inset-x-0 top-0 z-50", dark ? "text-white" : "text-[#102333]" )}>
+      <div className="container flex h-20 items-center justify-between gap-6">
+        <Logo dark={dark} />
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href} className={cx("rounded-full px-4 py-2 text-sm font-semibold transition", dark ? "text-white/70 hover:bg-white/10 hover:text-white" : "text-[#5e7180] hover:bg-[#e7f4f7] hover:text-[#102333]", location.startsWith(item.href) && (dark ? "bg-white/10 text-white" : "bg-[#e7f4f7] text-[#102333]"))}>
+              {item.label}
+            </Link>
+          ))}
+          <Link href="/studio" className={cx("ml-2 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition", dark ? "bg-[#27c6d9] text-[#071525] hover:bg-[#52d5e2]" : "bg-[#102333] text-white hover:bg-[#163b55]")}>Outreach Studio <ArrowUpRight className="h-3.5 w-3.5" /></Link>
+        </nav>
+        <button onClick={() => setOpen((value) => !value)} className={cx("grid h-10 w-10 place-items-center rounded-full border lg:hidden", dark ? "border-white/20 text-white" : "border-[#d7e4ea] text-[#102333]")} aria-label={open ? "Close navigation" : "Open navigation"}>
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
+      {open && (
+        <div className={cx("container lg:hidden", dark ? "text-white" : "text-[#102333]")}>
+          <div className={cx("mb-4 grid gap-1 rounded-[1.5rem] border p-3 shadow-xl backdrop-blur-xl", dark ? "border-white/10 bg-[#071525]/90" : "border-[#dce7eb] bg-white/95")}>
+            {navItems.map((item) => <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-sm font-semibold hover:bg-cyan-50">{item.label}</Link>)}
+            <Link href="/studio" onClick={() => setOpen(false)} className="rounded-xl bg-[#27c6d9] px-4 py-3 text-sm font-semibold text-[#071525]">Open Outreach Studio</Link>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bg-[#071525] text-white">
+      <div className="container grid gap-12 py-16 md:grid-cols-[1.2fr_.8fr_.8fr] md:py-20">
+        <div>
+          <Logo dark />
+          <p className="mt-6 max-w-sm text-sm leading-7 text-white/55">A living public layer for India’s polar science ecosystem. Built to make trusted research easier to find, understand and share.</p>
+          <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200"><CircleDot className="h-3.5 w-3.5" /> {demoNotice}</div>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-200/80">Explore</p>
+          <div className="mt-5 grid gap-3 text-sm text-white/60">{navItems.map((item) => <Link key={item.href} href={item.href} className="transition hover:text-white">{item.label}</Link>)}<Link href="/studio" className="transition hover:text-white">Outreach Studio</Link></div>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-200/80">Institution</p>
+          <p className="mt-5 text-sm leading-6 text-white/70">{institution.department}<br /><span className="text-white/40">{institution.ministry}</span></p>
+          <div className="mt-6 grid gap-3 text-sm text-white/60">{footerLinks.map((item) => <Link key={item.href} href={item.href} className="transition hover:text-white">{item.label}</Link>)}</div>
+        </div>
+      </div>
+      <div className="border-t border-white/10"><div className="container flex flex-col gap-2 py-5 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between"><span>{copyright}</span><span>Built for discovery, grounded in evidence.</span></div></div>
+    </footer>
+  );
+}
+
+function PageIntro({ eyebrow, title, description, dark = false, children }: { eyebrow: string; title: string; description: string; dark?: boolean; children?: React.ReactNode }) {
+  return <section className={cx(dark ? "bg-[#071525] text-white" : "bg-[#f4f8fb] text-[#102333]")}><div className="container pt-32 pb-16 md:pt-40 md:pb-20"><div className="max-w-3xl"><p className={cx("text-[11px] font-bold uppercase tracking-[0.22em]", dark ? "text-cyan-200" : "text-cyan-700")}>{eyebrow}</p><h1 className="mt-5 max-w-3xl font-display text-4xl font-semibold leading-[.98] tracking-[-0.06em] md:text-7xl">{title}</h1><p className={cx("mt-6 max-w-2xl text-base leading-7 md:text-lg", dark ? "text-white/60" : "text-[#5e7180]")}>{description}</p></div>{children}</div></section>;
+}
+
+function SearchField({ value, onChange, onSubmit, placeholder = "Search reports, stories, datasets...", dark = false }: { value: string; onChange: (value: string) => void; onSubmit?: () => void; placeholder?: string; dark?: boolean }) {
+  return <form onSubmit={(event) => { event.preventDefault(); onSubmit?.(); }} className={cx("flex min-h-14 items-center gap-3 rounded-full border px-5 transition focus-within:ring-4", dark ? "border-white/15 bg-white/10 text-white focus-within:border-cyan-300 focus-within:ring-cyan-300/10" : "border-[#d5e4ea] bg-white text-[#102333] focus-within:border-cyan-400 focus-within:ring-cyan-100")}>
+    <Search className={cx("h-5 w-5 shrink-0", dark ? "text-cyan-200" : "text-cyan-700")} />
+    <input value={value} onChange={(event) => onChange(event.target.value)} className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-current/40" placeholder={placeholder} aria-label={placeholder} />
+    <button type="submit" className={cx("hidden rounded-full px-4 py-2 text-xs font-bold sm:block", dark ? "bg-[#27c6d9] text-[#071525]" : "bg-[#102333] text-white")}>Search</button>
+  </form>;
+}
+
+function Tag({ children, className }: { children: React.ReactNode; className?: string }) { return <span className={cx("inline-flex items-center rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em]", className)}>{children}</span>; }
+
+function RecordCard({ item, saved, onSave, compact = false }: { item: (typeof repositoryItems)[number]; saved?: boolean; onSave?: () => void; compact?: boolean }) {
+  return <article className={cx("group relative overflow-hidden rounded-[1.5rem] border border-[#dbe7ec] bg-white transition duration-300 hover:-translate-y-1 hover:border-cyan-200", shadowCard, compact ? "p-5" : "p-6")}>
+    <div className={cx("absolute inset-x-0 top-0 h-1 bg-gradient-to-r", item.accent)} />
+    <div className="flex items-start justify-between gap-4"><Tag className={colorForType[item.type]}>{item.icon} {item.type}</Tag><button onClick={onSave} className={cx("grid h-8 w-8 place-items-center rounded-full transition", saved ? "bg-cyan-100 text-cyan-800" : "bg-[#f4f8fb] text-[#80939d] hover:bg-cyan-50 hover:text-cyan-700")} aria-label={saved ? "Remove bookmark" : "Save record"}><Bookmark className={cx("h-4 w-4", saved && "fill-current")} /></button></div>
+    <Link href={`/repository/${item.id}`} className="mt-6 block"><h3 className="max-w-sm font-display text-xl font-semibold leading-tight tracking-[-0.035em] text-[#102333] transition group-hover:text-cyan-800">{item.title}</h3><p className={cx("mt-3", bodyCopyClass, compact && "line-clamp-2")}>{item.summary}</p></Link>
+    <div className="mt-6 flex flex-wrap items-center gap-2 text-[11px] font-semibold text-[#80939d]"><span>{item.year}</span><span>·</span><span>{item.region}</span><span>·</span><span>{item.meta}</span></div>
+    {!compact && <div className="mt-5 flex flex-wrap gap-2">{item.topics.slice(0, 3).map((topic) => <span key={topic} className="rounded-full bg-[#f4f8fb] px-2.5 py-1 text-[10px] font-semibold text-[#66808b]">{topic}</span>)}</div>}
+  </article>;
+}
+
+function Home() {
+  const [, navigate] = useLocation();
+  const [search, setSearch] = useState("");
+  return <>
+    <section className="relative overflow-hidden bg-[#071525] text-white">
+      <div className="absolute inset-0 bg-cover bg-center opacity-90" style={{ backgroundImage: `url(${heroImage})` }} />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,#071525_8%,rgba(7,21,37,.92)_34%,rgba(7,21,37,.18)_80%,#071525_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_15%,rgba(39,198,217,.2),transparent_30%)]" />
+      <Header />
+      <div className="container relative flex min-h-[720px] flex-col justify-end pb-16 pt-32 md:min-h-[830px] md:pb-24">
+        <div className="max-w-4xl">
+          <div className="mb-8 flex flex-wrap items-center gap-3"><Tag className="border border-cyan-200/20 bg-cyan-200/10 text-cyan-100">MOES · NCPOR</Tag><span className="text-xs text-white/45">A living atlas of India’s polar work</span></div>
+          <h1 className="max-w-4xl font-display text-5xl font-semibold leading-[.92] tracking-[-0.07em] md:text-8xl">{homeTitle}</h1>
+          <p className="mt-8 max-w-2xl text-base leading-7 text-white/65 md:text-lg">{homeDescription}</p>
+          <div className="mt-9 max-w-2xl"><SearchField value={search} onChange={setSearch} dark placeholder="Search reports, expeditions, datasets and lessons" onSubmit={() => navigate(`/repository${search ? `?q=${encodeURIComponent(search)}` : ""}`)} /></div>
+          <div className="mt-4 flex flex-wrap gap-2">{promptChips.map((chip) => <button key={chip} onClick={() => { setSearch(chip); navigate(`/repository?q=${encodeURIComponent(chip)}`); }} className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs text-white/60 transition hover:border-cyan-200/50 hover:bg-white/10 hover:text-white">{chip}</button>)}</div>
+          <div className="mt-12 flex flex-wrap items-center gap-5"><Link href="/repository" className="inline-flex items-center gap-2 rounded-full bg-[#27c6d9] px-5 py-3 text-sm font-semibold text-[#071525] transition hover:-translate-y-0.5 hover:bg-[#52d5e2]">Explore the repository <ArrowUpRight className="h-4 w-4" /></Link><Link href="/assistant" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/10">Ask the assistant <MessageCircle className="h-4 w-4" /></Link></div>
+        </div>
+        <div className="mt-16 flex flex-wrap items-end justify-between gap-8 border-t border-white/15 pt-5"><div><p className="text-[10px] uppercase tracking-[0.18em] text-cyan-200/70">The repository is growing</p><p className="mt-2 text-sm text-white/50">Research becomes more useful when it can be found.</p></div><div className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-4">{stats.map((stat) => <div key={stat.label}><p className="font-display text-3xl font-semibold tracking-[-0.06em] text-white">{stat.value}</p><p className="mt-1 max-w-20 text-[10px] leading-4 text-white/45">{stat.label}</p></div>)}</div></div>
+      </div>
+    </section>
+    <section className="bg-[#f4f8fb]"><div className="container grid gap-10 py-20 md:grid-cols-[.7fr_1.3fr] md:py-28"><div><p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-700">Start with a question</p><h2 className={cx("mt-4 max-w-md", sectionTitleClass)}>Three ways into the knowledge.</h2><p className={cx("mt-5 max-w-md", bodyCopyClass)}>Whether you are looking for a source, a simpler explanation, or a story to share, POLARIS keeps the path visible.</p></div><div className="grid gap-4 sm:grid-cols-3"><FeatureLink href="/repository" number="01" icon={<Database />} title="Find a source" description="Reports, papers, datasets and field notes in one searchable archive." /><FeatureLink href="/assistant" number="02" icon={<Sparkles />} title="Ask in plain language" description="Get a grounded answer with the original records in view." /><FeatureLink href="/learn" number="03" icon={<GraduationCap />} title="Learn the why" description="Turn complex science into clear lessons and small wins." /></div></div></section>
+    <section className="bg-white"><div className="container py-20 md:py-28"><div className="flex flex-col justify-between gap-6 md:flex-row md:items-end"><div><p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-700">Featured record</p><h2 className={cx("mt-4", sectionTitleClass)}>A closer look at the 43rd.</h2></div><Link href={`/repository/${featuredExpedition.id}`} className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-700 transition hover:text-cyan-900">Read the field record <ArrowUpRight className="h-4 w-4" /></Link></div><div className="mt-10 grid overflow-hidden rounded-[2rem] bg-[#102333] text-white md:grid-cols-[1.2fr_.8fr]"><div className="relative min-h-[380px] overflow-hidden bg-gradient-to-br from-cyan-950 via-[#0d2b45] to-[#071525] p-8 md:p-12"><div className="absolute -right-20 -top-24 h-72 w-72 rounded-full border border-cyan-200/20 bg-cyan-300/10 blur-2xl" /><div className="absolute bottom-[-20%] right-[15%] h-72 w-72 rounded-full border border-white/10 bg-white/5" /><div className="relative flex h-full flex-col justify-between"><div className="flex items-center justify-between"><Tag className="bg-cyan-200/10 text-cyan-100">Field report · 2023</Tag><span className="text-5xl font-display font-semibold text-white/10">43</span></div><div><p className="max-w-lg font-display text-4xl font-semibold leading-[.95] tracking-[-0.055em] md:text-6xl">What does an expedition leave behind?</p><p className="mt-6 max-w-md text-sm leading-6 text-white/55">Observations become datasets. Datasets become evidence. Evidence becomes a better question.</p></div></div></div><div className="flex flex-col justify-between p-8 md:p-12"><div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200/70">43rd Indian Antarctic Expedition</p><p className="mt-5 text-sm leading-7 text-white/60">A field report on atmospheric observations, glaciology and biological sampling conducted across the Maitri region.</p></div><div className="mt-10"><div className="grid grid-cols-2 gap-4 border-y border-white/10 py-5 text-xs text-white/60"><div><span className="block text-white/30">Region</span><span className="mt-1 block font-semibold text-white">Antarctica</span></div><div><span className="block text-white/30">Format</span><span className="mt-1 block font-semibold text-white">PDF · 86 pages</span></div></div><Link href="/repository/exp-43" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 transition hover:text-white">Open source record <ArrowUpRight className="h-4 w-4" /></Link></div></div></div></div></section>
+    <section className="bg-[#e5f3f8]"><div className="container py-20 md:py-28"><div className="grid gap-10 md:grid-cols-[1fr_.8fr] md:items-end"><div><p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-700">Explore the poles</p><h2 className={cx("mt-4 max-w-2xl", sectionTitleClass)}>The map is not the story. It is the way in.</h2></div><p className={cx("max-w-md md:justify-self-end", bodyCopyClass)}>Follow stations, routes and the questions that travel between the Arctic, Antarctica and the Southern Ocean.</p></div><div className="mt-10 overflow-hidden rounded-[2rem] border border-cyan-100 bg-[#071525] p-4 shadow-[0_24px_70px_rgba(8,28,45,0.18)] md:p-6"><ExplorerMap preview /></div></div></section>
+    <section className="bg-[#f4f8fb]"><div className="container py-20 md:py-28"><div className="flex items-end justify-between gap-6"><div><p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-700">Latest dispatches</p><h2 className={cx("mt-4", sectionTitleClass)}>From the field.</h2></div><Link href="/media" className="hidden items-center gap-2 text-sm font-semibold text-cyan-700 sm:inline-flex">View all stories <ArrowUpRight className="h-4 w-4" /></Link></div><div className="mt-10 grid gap-5 md:grid-cols-3">{latestItems.map((item) => <RecordCard key={item.id} item={item} compact />)}</div><Link href="/media" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-cyan-700 sm:hidden">View all stories <ArrowUpRight className="h-4 w-4" /></Link></div></section>
+    <Footer />
+  </>;
+}
+
+function FeatureLink({ href, number, icon, title, description }: { href: string; number: string; icon: React.ReactNode; title: string; description: string }) {
+  return <Link href={href} className="group rounded-[1.5rem] border border-[#dbe7ec] bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-[0_16px_48px_rgba(8,28,45,0.08)]"><div className="flex items-center justify-between"><span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-50 text-cyan-700">{icon}</span><span className="font-display text-3xl font-semibold tracking-[-0.06em] text-[#d8e9ee]">{number}</span></div><h3 className="mt-7 font-display text-xl font-semibold tracking-[-0.035em] text-[#102333] group-hover:text-cyan-800">{title}</h3><p className={cx("mt-2 text-sm leading-6", bodyCopyClass)}>{description}</p><ArrowUpRight className="mt-5 h-4 w-4 text-cyan-700 transition group-hover:translate-x-1 group-hover:-translate-y-1" /></Link>;
+}
+
+function Repository() {
+  const [location, navigate] = useLocation();
+  const queryParam = new URLSearchParams(location.split("?")[1] ?? "").get("q") ?? "";
+  const [query, setQuery] = useState(queryParam);
+  const [type, setType] = useState<(typeof contentTypes)[number]>("All types");
+  const [region, setRegion] = useState<(typeof allRegions)[number]>("All regions");
+  const [year, setYear] = useState("All years");
+  const [topic, setTopic] = useState("All topics");
+  const [sort, setSort] = useState("relevance");
+  const [saved, setSaved] = useState<string[]>([]);
+  const filtered = useMemo(() => {
+    const normalized = query.toLowerCase();
+    const result = repositoryItems.filter((item) => {
+      const matchesText = !normalized || [item.title, item.summary, item.region, item.type, ...item.topics].join(" ").toLowerCase().includes(normalized);
+      const matchesType = type === "All types" || item.type === type;
+      const matchesRegion = region === "All regions" || item.region === region;
+      const matchesYear = year === "All years" || String(item.year) === year;
+      const matchesTopic = topic === "All topics" || item.topics.includes(topic);
+      return matchesText && matchesType && matchesRegion && matchesYear && matchesTopic;
+    });
+    return [...result].sort((a, b) => sort === "oldest" ? a.year - b.year : sort === "newest" ? b.year - a.year : a.id.localeCompare(b.id));
+  }, [query, type, region, year, topic, sort]);
+  const clear = () => { setQuery(""); setType("All types"); setRegion("All regions"); setYear("All years"); setTopic("All topics"); setSort("relevance"); navigate("/repository"); };
+  return <><Header /><PageIntro eyebrow="Knowledge repository" title="A public record of polar work." description={repositoryDescription}><div className="mt-9 max-w-3xl"><SearchField value={query} onChange={setQuery} onSubmit={() => navigate(`/repository${query ? `?q=${encodeURIComponent(query)}` : ""}`)} /></div><div className="mt-4 flex flex-wrap gap-2">{promptChips.map((chip) => <button key={chip} onClick={() => setQuery(chip)} className="rounded-full border border-[#d5e4ea] bg-white px-3 py-2 text-xs font-semibold text-[#5e7180] transition hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-800">{chip}</button>)}</div></PageIntro><main className="bg-[#f4f8fb]"><div className="container py-12 md:py-16"><div className="flex flex-col gap-5 border-b border-[#dbe7ec] pb-6 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-sm font-semibold text-[#102333]">{filtered.length} records <span className="font-normal text-[#91a2a9]">in the public index</span></p><p className="mt-1 text-xs text-[#7b8f99]">Search by source, topic, region or format.</p></div><div className="flex flex-wrap gap-2"><Select value={type} onChange={(value) => setType(value as (typeof contentTypes)[number])} options={contentTypes as unknown as string[]} /><Select value={region} onChange={(value) => setRegion(value as (typeof allRegions)[number])} options={allRegions as unknown as string[]} /><Select value={year} onChange={setYear} options={["All years", "2024", "2023", "2022", "2021", "2020"]} /><Select value={topic} onChange={setTopic} options={["All topics", ...allTopics]} /><Select value={sort} onChange={setSort} options={["relevance", "newest", "oldest"]} /></div></div><div className="mt-8 flex items-center justify-between gap-3"><div className="flex items-center gap-2 text-xs font-semibold text-[#7b8f99]"><Filter className="h-4 w-4 text-cyan-700" /> Filters active <span className="text-cyan-700">{[type !== "All types", region !== "All regions", year !== "All years", topic !== "All topics"].filter(Boolean).length}</span></div><button onClick={clear} className="text-xs font-semibold text-cyan-700 hover:text-cyan-900">Clear all</button></div>{filtered.length ? <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{filtered.map((item) => <RecordCard key={item.id} item={item} saved={saved.includes(item.id)} onSave={() => setSaved((current) => current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id])} />)}</div> : <EmptyState onClear={clear} />}</div></main><Footer /></>;
+}
+
+function Select({ value, onChange, options }: { value: string; onChange: (value: string) => void; options: string[] }) {
+  return <label className="relative"><span className="sr-only">Filter</span><select value={value} onChange={(event) => onChange(event.target.value)} className="h-10 appearance-none rounded-full border border-[#d5e4ea] bg-white py-2 pl-4 pr-9 text-xs font-semibold text-[#5e7180] outline-none transition hover:border-cyan-300 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100">{options.map((option) => <option key={option} value={option}>{option}</option>)}</select><ChevronDown className="pointer-events-none absolute right-3 top-3 h-3.5 w-3.5 text-[#7b8f99]" /></label>;
+}
+
+function EmptyState({ onClear }: { onClear: () => void }) { return <div className="mt-8 rounded-[2rem] border border-dashed border-[#c9dde4] bg-white px-6 py-16 text-center"><div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-cyan-50 text-cyan-700"><Search className="h-6 w-6" /></div><h3 className="mt-6 font-display text-2xl font-semibold tracking-[-0.04em] text-[#102333]">No sources found.</h3><p className={cx("mx-auto mt-3 max-w-md", bodyCopyClass)}>Try a broader topic, another year, or clear one of the filters.</p><button onClick={onClear} className="mt-6 rounded-full bg-[#102333] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#163b55]">Reset the index</button></div>; }
+
+function RepositoryDetail({ id }: { id: string }) {
+  const item = getItem(id) ?? featuredExpedition;
+  return <><Header /><main className="bg-[#f4f8fb] pt-28 md:pt-36"><div className="container pb-20 md:pb-28"><Link href="/repository" className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-700 hover:text-cyan-900">← Back to repository</Link><div className="mt-10 grid gap-10 lg:grid-cols-[1.1fr_.9fr]"><div><Tag className={colorForType[item.type]}>{item.icon} {item.type}</Tag><h1 className="mt-6 max-w-3xl font-display text-5xl font-semibold leading-[.95] tracking-[-0.065em] text-[#102333] md:text-7xl">{item.title}</h1><p className={cx("mt-7 max-w-2xl text-lg", bodyCopyClass)}>{item.summary}</p><div className="mt-8 flex flex-wrap gap-2">{item.topics.map((topic) => <span key={topic} className="rounded-full bg-white px-3 py-2 text-xs font-semibold text-[#607984] shadow-sm">{topic}</span>)}</div></div><div className={cx("relative min-h-[330px] overflow-hidden rounded-[2rem] bg-gradient-to-br p-8", item.accent)}><div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(255,255,255,.6),transparent_28%)]" /><div className="relative flex h-full flex-col justify-between"><div className="flex items-center justify-between"><span className="grid h-14 w-14 place-items-center rounded-2xl bg-white/70 text-2xl text-[#102333] shadow-sm">{item.icon}</span><span className="font-display text-8xl font-semibold tracking-[-0.1em] text-[#102333]/10">{item.year}</span></div><div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#102333]/50">Institutional source preview</p><p className="mt-2 max-w-xs font-display text-2xl font-semibold leading-tight text-[#102333]">Trace the record. Follow the question.</p></div></div></div></div><div className="mt-14 grid gap-5 md:grid-cols-3"><InfoTile label="Year" value={String(item.year)} /><InfoTile label="Region" value={item.region} /><InfoTile label="Format" value={item.meta} /></div><div className="mt-14 grid gap-10 lg:grid-cols-[1.2fr_.8fr]"><div className="rounded-[2rem] border border-[#dbe7ec] bg-white p-7 md:p-10"><div className="flex items-center justify-between gap-4"><h2 className="font-display text-3xl font-semibold tracking-[-0.05em] text-[#102333]">Source abstract</h2><button className="inline-flex items-center gap-2 rounded-full border border-[#dbe7ec] px-3 py-2 text-xs font-semibold text-[#5e7180] hover:border-cyan-300 hover:bg-cyan-50"><ExternalLink className="h-3.5 w-3.5" /> Open file</button></div><p className={cx("mt-6 text-base", bodyCopyClass)}>This prototype record represents the kind of trusted source POLARIS is designed to make discoverable. In production, the abstract, metadata, source file and related assets will be pulled from NCPOR’s institutional repository with a permanent citation link.</p><div className="mt-8 rounded-2xl bg-[#f4f8fb] p-5"><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-700">Why it matters</p><p className="mt-3 text-sm leading-6 text-[#5e7180]">Every source becomes more valuable when a student can find it, a researcher can cite it, and an outreach team can explain it without losing the evidence.</p></div></div><div><p className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-700">Related records</p><div className="mt-5 grid gap-3">{repositoryItems.filter((candidate) => candidate.id !== item.id).slice(0, 3).map((related) => <Link key={related.id} href={`/repository/${related.id}`} className="group rounded-2xl border border-[#dbe7ec] bg-white p-4 transition hover:-translate-y-0.5 hover:border-cyan-200"><div className="flex items-center gap-3"><span className={cx("grid h-9 w-9 place-items-center rounded-xl text-xs", colorForType[related.type])}>{related.icon}</span><div className="min-w-0"><p className="truncate text-sm font-semibold text-[#102333] group-hover:text-cyan-800">{related.title}</p><p className="mt-1 text-xs text-[#80939d]">{related.type} · {related.year}</p></div></div></Link>)}</div></div></div></div></main><Footer /></>;
+}
+
+function InfoTile({ label, value }: { label: string; value: string }) { return <div className="rounded-2xl border border-[#dbe7ec] bg-white p-5"><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#91a2a9]">{label}</p><p className="mt-3 font-display text-xl font-semibold tracking-[-0.04em] text-[#102333]">{value}</p></div>; }
+
+function Assistant() {
+  const [prompt, setPrompt] = useState("");
+  const [messages, setMessages] = useState<Array<{ role: "user" | "assistant"; text: string }>>([]);
+  const [simple, setSimple] = useState(false);
+  const ask = (value = prompt) => { if (!value.trim()) return; setMessages((current) => [...current, { role: "user", text: value }, { role: "assistant", text: simple ? assistantAnswer.simple : assistantAnswer.full }]); setPrompt(""); };
+  return <><Header /><PageIntro eyebrow="AI polar assistant" title="Ask the archive a better question." description={assistantDescription} dark><div className="mt-9 flex flex-wrap gap-2">{promptChips.map((chip) => <button key={chip} onClick={() => ask(chip)} className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs text-white/65 transition hover:border-cyan-200/50 hover:bg-white/10 hover:text-white">{chip}</button>)}</div></PageIntro><main className="bg-[#f4f8fb]"><div className="container grid gap-6 py-12 md:py-16 lg:grid-cols-[1fr_320px]"><section className="overflow-hidden rounded-[2rem] border border-[#dbe7ec] bg-white shadow-[0_20px_60px_rgba(8,28,45,0.08)]"><div className="flex items-center justify-between border-b border-[#e5edf0] px-6 py-5 md:px-8"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-100 text-cyan-800"><Sparkles className="h-5 w-5" /></span><div><p className="text-sm font-semibold text-[#102333]">POLARIS assistant</p><p className="text-xs text-[#80939d]">Grounded in the knowledge repository</p></div></div><label className="flex items-center gap-2 text-xs font-semibold text-[#5e7180]"><span className={cx("relative h-5 w-9 rounded-full transition", simple ? "bg-cyan-500" : "bg-[#dbe7ec]")}><input type="checkbox" checked={simple} onChange={(event) => setSimple(event.target.checked)} className="sr-only" /><span className={cx("absolute top-1 h-3 w-3 rounded-full bg-white shadow transition", simple ? "left-5" : "left-1")} /></span> Class 10 mode</label></div><div className="min-h-[440px] space-y-5 p-6 md:p-8">{messages.length === 0 ? <div className="flex min-h-[340px] flex-col items-center justify-center text-center"><div className="grid h-16 w-16 place-items-center rounded-[1.5rem] bg-[#e5f3f8] text-cyan-700"><MessageCircle className="h-7 w-7" /></div><h2 className="mt-6 font-display text-3xl font-semibold tracking-[-0.05em] text-[#102333]">What are you curious about?</h2><p className={cx("mt-3 max-w-md", bodyCopyClass)}>Try a question about an expedition, station or the science behind a polar observation.</p></div> : messages.map((message, index) => <div key={`${message.role}-${index}`} className={cx("flex gap-3", message.role === "user" ? "justify-end" : "justify-start")}><div className={cx("max-w-[80%] rounded-[1.5rem] px-5 py-4 text-sm leading-7", message.role === "user" ? "bg-[#102333] text-white" : "bg-[#e5f3f8] text-[#294755]")}>{message.text}{message.role === "assistant" && <div className="mt-4 flex flex-wrap gap-2 border-t border-cyan-900/10 pt-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-800"><span><CheckCircle2 className="mr-1 inline h-3.5 w-3.5" /> Grounded answer</span><span>2 source records</span></div>}</div></div>)}</div><div className="border-t border-[#e5edf0] p-5 md:p-6"><form onSubmit={(event) => { event.preventDefault(); ask(); }} className="flex items-center gap-3 rounded-2xl border border-[#d5e4ea] bg-[#f4f8fb] p-2 pl-4 focus-within:border-cyan-400 focus-within:ring-4 focus-within:ring-cyan-100"><input value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder="Ask about a station, expedition or topic..." className="min-w-0 flex-1 bg-transparent text-sm text-[#102333] outline-none placeholder:text-[#91a2a9]" /><button type="submit" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#102333] text-white transition hover:bg-[#163b55] disabled:opacity-40" disabled={!prompt.trim()} aria-label="Send question"><Send className="h-4 w-4" /></button></form><p className="mt-3 text-center text-[10px] text-[#91a2a9]">Prototype response · Always verify with the linked source record.</p></div></section><aside className="space-y-5"><div className="rounded-[1.5rem] border border-[#dbe7ec] bg-white p-6"><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-700">Cited sources</p><div className="mt-5 space-y-3">{assistantAnswer.sources.map((source) => <div key={source} className="rounded-2xl bg-[#f4f8fb] p-4"><div className="flex gap-3"><FileText className="mt-0.5 h-4 w-4 shrink-0 text-cyan-700" /><p className="text-xs font-semibold leading-5 text-[#294755]">{source}</p></div></div>)}</div><Link href="/repository" className="mt-5 inline-flex items-center gap-2 text-xs font-semibold text-cyan-700">Browse the repository <ArrowUpRight className="h-3.5 w-3.5" /></Link></div><div className="rounded-[1.5rem] bg-[#102333] p-6 text-white"><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200/80">Try this next</p><p className="mt-4 font-display text-2xl font-semibold leading-tight tracking-[-0.04em]">“Teach me this topic.”</p><p className="mt-3 text-sm leading-6 text-white/55">Turn an answer into a lesson, then test what you remember.</p><Link href="/learn" className="mt-6 inline-flex items-center gap-2 rounded-full bg-cyan-300 px-4 py-2.5 text-xs font-semibold text-[#071525]">Open learning <ArrowUpRight className="h-3.5 w-3.5" /></Link></div></aside></div></main><Footer /></>;
+}
+
+function Learn() {
+  return <><Header /><PageIntro eyebrow="Smart learning" title="Big science. Clear next steps." description={learnDescription}><div className="mt-8 flex flex-wrap gap-2"><Tag className="bg-[#102333] text-white">6 learning paths</Tag><Tag className="border border-[#d5e4ea] bg-white text-[#5e7180]">Progress saved in this demo</Tag></div></PageIntro><main className="bg-[#f4f8fb]"><div className="container py-12 md:py-16"><div className="mb-8 flex items-end justify-between gap-4"><div><p className="text-sm font-semibold text-[#102333]">Choose a path</p><p className="mt-1 text-xs text-[#80939d]">Start simple, go deeper when you are ready.</p></div><div className="hidden items-center gap-2 text-xs font-semibold text-[#80939d] sm:flex"><span className="h-2 w-2 rounded-full bg-cyan-500" /> 1 of 6 in progress</div></div><div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{learningTopics.map((topic, index) => <Link key={topic.id} href={`/learn/${topic.id}`} className="group relative overflow-hidden rounded-[1.7rem] border border-[#dbe7ec] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-[0_20px_60px_rgba(8,28,45,0.1)]"><div className={cx("absolute inset-x-0 top-0 h-24 bg-gradient-to-br opacity-70", topicColorMap[topic.color])} /><div className="relative flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-700">{topic.tag}</span><span className="font-display text-4xl font-semibold tracking-[-0.08em] text-[#dbe9ed]">0{index + 1}</span></div><h2 className="relative mt-16 max-w-xs font-display text-2xl font-semibold leading-tight tracking-[-0.045em] text-[#102333] group-hover:text-cyan-800">{topic.title}</h2><p className={cx("relative mt-3", bodyCopyClass)}>{topic.description}</p><div className="relative mt-7"><div className="flex items-center justify-between text-[10px] font-semibold text-[#80939d]"><span>Progress</span><span>{topic.progress}%</span></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e5edf0]"><div className="h-full rounded-full bg-cyan-500" style={{ width: `${topic.progress}%` }} /></div></div><div className="relative mt-6 flex items-center justify-between text-xs font-semibold text-cyan-700"><span>{topic.progress ? "Continue learning" : "Open lesson"}</span><ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-1 group-hover:-translate-y-1" /></div></Link>)}</div></div></main><Footer /></>;
+}
+
+function TopicDetail({ id }: { id: string }) {
+  const topic = getTopic(id);
+  return <><Header /><main className="bg-[#f4f8fb] pt-28 md:pt-36"><div className="container pb-20 md:pb-28"><Link href="/learn" className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-700">← Back to learning</Link><div className="mt-10 grid gap-10 lg:grid-cols-[1.15fr_.85fr]"><div><Tag className="bg-cyan-100 text-cyan-800">Lesson · {topic.tag}</Tag><h1 className="mt-6 max-w-3xl font-display text-5xl font-semibold leading-[.95] tracking-[-0.065em] text-[#102333] md:text-7xl">{topic.title}</h1><p className={cx("mt-7 max-w-2xl text-lg", bodyCopyClass)}>{topic.description} This learning path turns a complex field into a clear sequence of ideas you can use, revisit and explain to someone else.</p><div className="mt-8 flex flex-wrap gap-3"><Link href={`/learn/${topic.id}/quiz`} className="inline-flex items-center gap-2 rounded-full bg-[#102333] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#163b55]">Take the quiz <ArrowUpRight className="h-4 w-4" /></Link><button className="inline-flex items-center gap-2 rounded-full border border-[#d5e4ea] bg-white px-5 py-3 text-sm font-semibold text-[#102333] hover:border-cyan-300">Save path <Bookmark className="h-4 w-4" /></button></div></div><div className={cx("relative min-h-[360px] overflow-hidden rounded-[2rem] bg-gradient-to-br p-8", topicColorMap[topic.color])}><div className="absolute -right-14 top-8 h-64 w-64 rounded-full border border-white/60" /><div className="absolute bottom-8 left-8 h-32 w-32 rounded-full border border-white/50" /><div className="relative flex h-full flex-col justify-between"><span className="grid h-14 w-14 place-items-center rounded-2xl bg-white/75 text-2xl text-[#102333]"><BookOpen className="h-6 w-6" /></span><div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#102333]/50">Learning path</p><p className="mt-3 font-display text-3xl font-semibold leading-tight tracking-[-0.05em] text-[#102333]">One concept at a time.</p></div></div></div></div><div className="mt-14 grid gap-5 md:grid-cols-3"><InfoTile label="Time to complete" value="8–12 min" /><InfoTile label="Level" value="Curious beginner" /><InfoTile label="Next step" value="3 question quiz" /></div><div className="mt-14 grid gap-8 lg:grid-cols-[1.15fr_.85fr]"><article className="rounded-[2rem] border border-[#dbe7ec] bg-white p-7 md:p-10"><p className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-700">The idea in one minute</p><h2 className="mt-4 font-display text-3xl font-semibold tracking-[-0.05em] text-[#102333]">Polar science starts with noticing patterns.</h2><p className={cx("mt-6 text-base", bodyCopyClass)}>A field station is more than a building on a map. It is a lens: a place where observations become time series, where a small change can be connected to a planetary system, and where people from different disciplines learn to read the same environment together.</p><div className="mt-8 grid gap-3 sm:grid-cols-3"><div className="rounded-2xl bg-[#e5f3f8] p-4"><p className="text-[10px] font-bold uppercase tracking-[0.15em] text-cyan-800">01</p><p className="mt-3 text-sm font-semibold text-[#294755]">Observe</p></div><div className="rounded-2xl bg-[#edf7f3] p-4"><p className="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-800">02</p><p className="mt-3 text-sm font-semibold text-[#294755]">Compare</p></div><div className="rounded-2xl bg-[#fff4df] p-4"><p className="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-800">03</p><p className="mt-3 text-sm font-semibold text-[#294755]">Explain</p></div></div></article><aside className="rounded-[2rem] bg-[#102333] p-7 text-white md:p-8"><p className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-200">Key terms</p><div className="mt-5 flex flex-wrap gap-2">{["Cryosphere", "Field notes", "Climate signal", "Observation", "Station"].map((term) => <span key={term} className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs text-white/70">{term}</span>)}</div><div className="mt-12 border-t border-white/10 pt-5"><p className="text-sm leading-6 text-white/55">Ready to check what you remember?</p><Link href={`/learn/${topic.id}/quiz`} className="mt-4 inline-flex items-center gap-2 rounded-full bg-cyan-300 px-4 py-2.5 text-xs font-semibold text-[#071525]">Start quiz <ArrowUpRight className="h-3.5 w-3.5" /></Link></div></aside></div></div></main><Footer /></>;
+}
+
+function Quiz({ id }: { id: string }) {
+  const topic = getTopic(id);
+  const [current, setCurrent] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const question = quizQuestions[current];
+  const complete = current >= quizQuestions.length;
+  const next = () => { if (selected === null) return; if (selected === question.answer) setScore((value) => value + 1); setSelected(null); setCurrent((value) => value + 1); };
+  const reset = () => { setCurrent(0); setSelected(null); setScore(0); };
+  return <><Header /><main className="min-h-screen bg-[#f4f8fb] pt-28 md:pt-36"><div className="container pb-20 md:pb-28"><Link href={`/learn/${topic.id}`} className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-700">← Back to lesson</Link><div className="mx-auto mt-12 max-w-3xl"><div className="flex items-end justify-between gap-4"><div><p className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-700">Quick check · {topic.title}</p><h1 className="mt-4 font-display text-4xl font-semibold tracking-[-0.06em] text-[#102333] md:text-6xl">What stayed with you?</h1></div><span className="font-display text-4xl font-semibold tracking-[-0.08em] text-[#d4e6eb]">{complete ? "03" : `0${current + 1}`}</span></div><div className="mt-8 h-1.5 overflow-hidden rounded-full bg-[#dbe7ec]"><div className="h-full rounded-full bg-cyan-500 transition-all" style={{ width: `${Math.min(100, (current / quizQuestions.length) * 100)}%` }} /></div>{complete ? <div className="mt-10 rounded-[2rem] bg-[#102333] p-8 text-white md:p-12"><div className="grid h-16 w-16 place-items-center rounded-2xl bg-cyan-300 text-[#071525]"><CheckCircle2 className="h-8 w-8" /></div><p className="mt-8 text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-200">Path complete</p><h2 className="mt-3 font-display text-5xl font-semibold tracking-[-0.07em]">{score} / {quizQuestions.length}</h2><p className="mt-5 max-w-md text-base leading-7 text-white/60">Nice work. The next step is to ask the assistant about a real source and see how the ideas connect.</p><div className="mt-8 flex flex-wrap gap-3"><button onClick={reset} className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-[#071525]">Try again <RefreshCcw className="h-4 w-4" /></button><Link href="/assistant" className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white">Ask the assistant <ArrowUpRight className="h-4 w-4" /></Link></div></div> : <div className="mt-10 rounded-[2rem] border border-[#dbe7ec] bg-white p-7 shadow-[0_20px_60px_rgba(8,28,45,0.08)] md:p-10"><div className="flex items-center justify-between text-xs font-semibold text-[#80939d]"><span>Question {current + 1} of {quizQuestions.length}</span><span>Choose one answer</span></div><h2 className="mt-8 max-w-2xl font-display text-3xl font-semibold leading-tight tracking-[-0.05em] text-[#102333] md:text-4xl">{question.question}</h2><div className="mt-8 grid gap-3">{question.options.map((option, index) => <button key={option} onClick={() => setSelected(index)} className={cx("flex items-center justify-between rounded-2xl border p-4 text-left text-sm font-semibold transition", selected === index ? "border-cyan-400 bg-cyan-50 text-cyan-900 ring-4 ring-cyan-100" : "border-[#dbe7ec] bg-white text-[#294755] hover:border-cyan-300 hover:bg-cyan-50/50")}><span className="flex items-center gap-3"><span className={cx("grid h-8 w-8 place-items-center rounded-full text-xs", selected === index ? "bg-cyan-500 text-white" : "bg-[#f4f8fb] text-[#80939d]")}>{String.fromCharCode(65 + index)}</span>{option}</span>{selected === index && <Check className="h-4 w-4 text-cyan-700" />}</button>)}</div><button onClick={next} disabled={selected === null} className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#102333] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#163b55] disabled:cursor-not-allowed disabled:opacity-35">{current === quizQuestions.length - 1 ? "See result" : "Next question"}<ChevronRight className="h-4 w-4" /></button></div>}</div></div></main><Footer /></>;
+}
+
+function ExplorerMap({ preview = false }: { preview?: boolean }) {
+  const [selected, setSelected] = useState("maitri");
+  const station = getStation(selected);
+  return <div className={cx("relative overflow-hidden rounded-[1.5rem] bg-[radial-gradient(circle_at_50%_44%,rgba(39,198,217,.16),transparent_22%),linear-gradient(135deg,#0b2439,#071525)]", preview ? "min-h-[410px]" : "min-h-[560px]")}>
+    <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(180,230,239,.12)_1px,transparent_1px),linear-gradient(90deg,rgba(180,230,239,.12)_1px,transparent_1px)] [background-size:44px_44px]" />
+    <div className="absolute left-[14%] top-[28%] h-[35%] w-[72%] rounded-[50%] border border-cyan-200/15 bg-white/[.02] blur-[1px]" />
+    <div className="absolute left-[23%] top-[42%] h-[28%] w-[55%] rounded-[50%] border border-cyan-200/20" />
+    <div className="absolute left-[36%] top-[51%] h-[20%] w-[30%] rounded-[50%] bg-[#eafcff] shadow-[0_0_90px_rgba(39,198,217,.3)]" />
+    <div className="absolute left-[29%] top-[58%] h-[14%] w-[12%] rotate-12 rounded-[48%] bg-[#d9f5fa]" />
+    <div className="absolute left-[52%] top-[52%] h-[11%] w-[23%] -rotate-12 rounded-[48%] bg-[#d9f5fa]" />
+    <div className="absolute left-[66%] top-[36%] h-[7%] w-[8%] rotate-12 rounded-[48%] bg-[#d9f5fa]" />
+    <div className="absolute left-[74%] top-[15%] h-[5%] w-[7%] -rotate-12 rounded-[48%] bg-[#d9f5fa]" />
+    <svg className="absolute inset-0 h-full w-full opacity-50" viewBox="0 0 1000 560" preserveAspectRatio="none"><path d="M180 330 C360 340 480 260 680 230 S800 120 860 84" fill="none" stroke="#27c6d9" strokeDasharray="8 10" strokeWidth="2" /><path d="M360 330 C490 410 620 340 690 240" fill="none" stroke="#ffb547" strokeDasharray="5 11" strokeWidth="2" /></svg>
+    {stations.map((item) => <button key={item.id} onClick={() => setSelected(item.id)} className="absolute -translate-x-1/2 -translate-y-1/2" style={stationCoordinates[item.id]} aria-label={`View ${item.name} station`}><span className={cx("relative grid h-8 w-8 place-items-center rounded-full border-4 border-[#071525] text-xs font-bold text-[#071525] shadow-[0_0_0_5px_rgba(39,198,217,.12)] transition hover:scale-110", selected === item.id ? "bg-[#27c6d9]" : item.color === "amber" ? "bg-[#ffb547]" : item.color === "violet" ? "bg-[#b5a0ff]" : "bg-[#9feaf2]")}>{item.number}</span><span className={cx("mt-2 block whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.16em] transition", selected === item.id ? "text-white" : "text-white/40")}>{item.name}</span></button>)}
+    <div className="absolute left-5 top-5 max-w-xs md:left-8 md:top-8"><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-200/70">Polar explorer</p><p className="mt-3 max-w-[220px] font-display text-2xl font-semibold leading-tight tracking-[-0.05em] text-white">Three stations. One connected system.</p></div>
+    <div className="absolute bottom-4 left-4 right-4 grid gap-3 rounded-[1.25rem] border border-white/10 bg-[#071525]/80 p-4 backdrop-blur-xl md:bottom-6 md:left-6 md:right-auto md:w-[330px]"><div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200">{station.name} · {station.region}</p><p className="mt-2 font-display text-xl font-semibold text-white">{station.description}</p></div><span className="text-2xl text-white/20">{station.number}</span></div><div className="flex flex-wrap gap-2">{station.facts.map((fact) => <span key={fact} className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] text-white/60">{fact}</span>)}</div></div>
+  </div>;
+}
+
+function Explorer() { return <><Header /><PageIntro eyebrow="Polar explorer" title="Follow the work to the edge of the map." description={explorerDescription} dark /><main className="bg-[#f4f8fb]"><div className="container py-12 md:py-16"><div className="mb-8 flex flex-wrap items-end justify-between gap-5"><div><p className="text-sm font-semibold text-[#102333]">India’s polar stations</p><p className="mt-1 text-xs text-[#80939d]">Select a marker to open a station brief.</p></div><div className="flex items-center gap-2 rounded-full border border-[#dbe7ec] bg-white px-3 py-2 text-xs font-semibold text-[#5e7180]"><span className="h-2 w-2 rounded-full bg-cyan-500" /> Expedition routes <span className="h-2 w-2 rounded-full bg-amber-400" /> Station network</div></div><ExplorerMap /><div className="mt-8 grid gap-4 md:grid-cols-3">{stations.map((station) => <div key={station.id} className="rounded-[1.5rem] border border-[#dbe7ec] bg-white p-5"><div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-700">{station.number} · Station</span><MapPin className="h-4 w-4 text-cyan-700" /></div><h2 className="mt-6 font-display text-2xl font-semibold tracking-[-0.05em] text-[#102333]">{station.name}</h2><p className="mt-2 text-sm text-[#80939d]">{station.region}</p><div className="mt-5 border-t border-[#e5edf0] pt-4 text-xs leading-6 text-[#5e7180]">Established {station.established}<br />{station.facts[2]}</div></div>)}</div></div></main><Footer /></>; }
+
+function Media() {
+  const [active, setActive] = useState("All");
+  const categories = ["All", "Field note", "Video", "Photo essay", "News"];
+  const stories = active === "All" ? mediaStories : mediaStories.filter((story) => story.type === active);
+  return <><Header /><PageIntro eyebrow="Stories & media" title="The science has a human side." description={mediaDescription}><div className="mt-8 flex flex-wrap gap-2">{categories.map((category) => <button key={category} onClick={() => setActive(category)} className={cx("rounded-full px-4 py-2 text-xs font-semibold transition", active === category ? "bg-[#102333] text-white" : "border border-[#d5e4ea] bg-white text-[#5e7180] hover:border-cyan-300 hover:bg-cyan-50")}>{category}</button>)}</div></PageIntro><main className="bg-[#f4f8fb]"><div className="container py-12 md:py-16"><div className="grid gap-5 md:grid-cols-2">{stories.map((story, index) => <article key={story.id} className={cx("group relative min-h-[360px] overflow-hidden rounded-[2rem] bg-gradient-to-br p-7 text-white transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(8,28,45,0.16)]", story.gradient, index === 0 && "md:row-span-2 md:min-h-[740px]")}><div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_18%,rgba(255,255,255,.18),transparent_28%)]" /><div className="absolute bottom-[-12%] right-[-8%] h-64 w-64 rounded-full border border-white/15" /><div className="relative flex h-full flex-col justify-between"><div className="flex items-center justify-between"><Tag className="bg-white/10 text-white/70">{story.type}</Tag><span className="text-sm text-white/50">{story.eyebrow}</span></div><div><h2 className={cx("max-w-xl font-display font-semibold leading-[.95] tracking-[-0.06em]", index === 0 ? "text-5xl md:text-7xl" : "text-4xl")}>{story.title}</h2><p className="mt-5 max-w-md text-sm leading-6 text-white/60">{story.summary}</p><button className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 transition group-hover:text-white">Open story <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-1 group-hover:-translate-y-1" /></button></div></div></article>)}</div><div className="mt-16 grid gap-5 md:grid-cols-3"><div className="rounded-[1.5rem] bg-[#102333] p-6 text-white"><Radio className="h-6 w-6 text-cyan-300" /><h3 className="mt-10 font-display text-2xl font-semibold tracking-[-0.05em]">Field notes</h3><p className="mt-3 text-sm leading-6 text-white/55">Short observations from long journeys.</p></div><div className="rounded-[1.5rem] border border-[#dbe7ec] bg-white p-6"><CameraIcon /><h3 className="mt-10 font-display text-2xl font-semibold tracking-[-0.05em] text-[#102333]">Photo essays</h3><p className="mt-3 text-sm leading-6 text-[#5e7180]">See the textures of ice, rock, sea and sky.</p></div><div className="rounded-[1.5rem] border border-[#dbe7ec] bg-white p-6"><Play className="h-6 w-6 text-cyan-700" /><h3 className="mt-10 font-display text-2xl font-semibold tracking-[-0.05em] text-[#102333]">Short films</h3><p className="mt-3 text-sm leading-6 text-[#5e7180]">A clear window into life at the stations.</p></div></div></div></main><Footer /></>;
+}
+
+function CameraIcon() { return <span className="grid h-6 w-6 place-items-center rounded-md border-2 border-cyan-700 text-[10px] text-cyan-700">▧</span>; }
+
+function Studio() {
+  const [step, setStep] = useState(3);
+  const [channel, setChannel] = useState(outreachChannels[0].id);
+  const [drafts, setDrafts] = useState<Record<string, string>>(() => Object.fromEntries(outreachChannels.map((item) => [item.id, item.content])));
+  const [notice, setNotice] = useState("");
+  const activeChannel = outreachChannels.find((item) => item.id === channel) ?? outreachChannels[0];
+  const update = (value: string) => setDrafts((current) => ({ ...current, [channel]: value }));
+  const approve = () => { setStep(4); setNotice("Draft marked approved in this demo workspace."); window.setTimeout(() => setNotice(""), 3000); };
+  return <><Header /><PageIntro eyebrow="Outreach studio" title="One trusted source. Every useful format." description={studioDescription} dark><div className="mt-8 flex flex-wrap gap-2"><Tag className="bg-cyan-300 text-[#071525]">AI-assisted</Tag><Tag className="border border-white/15 bg-white/5 text-white/60">Human review required</Tag></div></PageIntro><main className="bg-[#f4f8fb]"><div className="container py-12 md:py-16"><div className="rounded-[2rem] border border-[#dbe7ec] bg-white p-5 shadow-[0_20px_60px_rgba(8,28,45,0.08)] md:p-8"><div className="flex flex-col justify-between gap-6 border-b border-[#e5edf0] pb-8 md:flex-row md:items-center"><div><p className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-700">Source record</p><h2 className="mt-3 font-display text-3xl font-semibold tracking-[-0.05em] text-[#102333]">43rd Indian Antarctic Expedition</h2><p className="mt-2 text-sm text-[#80939d]">Report · 2023 · Antarctica · Uploaded 09 Sep 2026</p></div><Link href="/repository/exp-43" className="inline-flex items-center gap-2 rounded-full border border-[#dbe7ec] px-4 py-2.5 text-xs font-semibold text-[#5e7180] hover:border-cyan-300 hover:bg-cyan-50">View source <ExternalLink className="h-3.5 w-3.5" /></Link></div><div className="relative mt-8 grid gap-4 md:grid-cols-5">{studioSteps.map((item, index) => <button key={item} onClick={() => setStep(index)} className={cx("relative text-left", index < studioSteps.length - 1 && "md:after:absolute md:after:left-[58%] md:after:top-4 md:after:h-px md:after:w-[84%] md:after:bg-[#dbe7ec]", index < step && "md:after:bg-cyan-400")}><div className="relative z-10 flex items-center gap-3"><span className={cx("grid h-8 w-8 place-items-center rounded-full border text-xs font-bold", index <= step ? "border-cyan-500 bg-cyan-500 text-white" : "border-[#dbe7ec] bg-white text-[#80939d]")}>{index < step ? <Check className="h-4 w-4" /> : index + 1}</span><span className={cx("text-xs font-semibold", index <= step ? "text-[#102333]" : "text-[#80939d]")}>{item}</span></div><p className="ml-11 mt-2 text-[10px] text-[#a1b0b5]">{statusCopy[item]}</p></button>)}</div></div><div className="mt-6 grid gap-5 lg:grid-cols-[260px_1fr]"><aside className="rounded-[1.5rem] bg-[#102333] p-4 text-white"><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200/70">Generate for</p><div className="mt-2 grid gap-1">{outreachChannels.map((item) => <button key={item.id} onClick={() => setChannel(item.id)} className={cx("flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition", channel === item.id ? "bg-cyan-300 text-[#071525]" : "text-white/60 hover:bg-white/10 hover:text-white")}><span className="grid h-7 w-7 place-items-center rounded-lg bg-black/10 text-xs">{item.icon}</span>{item.label}</button>)}</div><div className="mt-8 border-t border-white/10 px-3 pt-5"><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">Tone</p><div className="mt-3 flex flex-wrap gap-2"><span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] text-white/60">Clear</span><span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] text-white/60">Grounded</span><span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] text-white/60">Human</span></div></div></aside><section className="rounded-[1.5rem] border border-[#dbe7ec] bg-[#f8fbfc] p-5 md:p-7"><div className="flex items-center justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-700">{activeChannel.label}</p><p className="mt-2 text-xs text-[#80939d]">AI generated · human review required</p></div><div className="flex gap-2"><button onClick={() => { navigator.clipboard?.writeText(drafts[channel]); setNotice("Draft copied to clipboard."); window.setTimeout(() => setNotice(""), 2500); }} className="grid h-9 w-9 place-items-center rounded-full border border-[#dbe7ec] bg-white text-[#5e7180] hover:border-cyan-300" aria-label="Copy draft"><Copy className="h-4 w-4" /></button><button onClick={() => setNotice("Draft regenerated from the source record.")} className="grid h-9 w-9 place-items-center rounded-full border border-[#dbe7ec] bg-white text-[#5e7180] hover:border-cyan-300" aria-label="Regenerate draft"><RefreshCcw className="h-4 w-4" /></button></div></div><textarea value={drafts[channel]} onChange={(event) => update(event.target.value)} className="mt-6 min-h-[280px] w-full resize-y rounded-2xl border border-[#dbe7ec] bg-white p-5 text-sm leading-7 text-[#294755] outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100" /><div className="mt-5 flex flex-col gap-3 border-t border-[#e5edf0] pt-5 sm:flex-row sm:items-center sm:justify-between"><p className="text-xs text-[#80939d]">{drafts[channel].length} characters · {step >= 4 ? "Approved" : "Draft"}</p><div className="flex gap-2"><button onClick={() => { setStep(Math.min(4, step + 1)); setNotice("Workflow step updated."); window.setTimeout(() => setNotice(""), 2500); }} className="rounded-full border border-[#dbe7ec] bg-white px-4 py-2.5 text-xs font-semibold text-[#5e7180] hover:border-cyan-300">Move to next step</button><button onClick={approve} className="inline-flex items-center gap-2 rounded-full bg-[#102333] px-4 py-2.5 text-xs font-semibold text-white hover:bg-[#163b55]"><CheckCircle2 className="h-4 w-4" /> Approve draft</button></div></div>{notice && <div className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-xs font-semibold text-emerald-800">{notice}</div>}</section></div></div></main><Footer /></>;
+}
+
+function About() { return <><Header /><PageIntro eyebrow="About POLARIS" title="A public layer for a polar science ecosystem." description={aboutDescription}><div className="mt-8 flex flex-wrap gap-2"><Tag className="bg-[#102333] text-white">NCPOR</Tag><Tag className="border border-[#d5e4ea] bg-white text-[#5e7180]">Ministry of Earth Sciences</Tag></div></PageIntro><main className="bg-[#f4f8fb]"><div className="container py-12 md:py-16"><div className="grid gap-5 lg:grid-cols-[1.1fr_.9fr]"><article className="rounded-[2rem] bg-[#102333] p-8 text-white md:p-12"><p className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-200">Why it exists</p><h2 className="mt-5 max-w-xl font-display text-4xl font-semibold leading-tight tracking-[-0.06em] md:text-6xl">Make the record easier to enter.</h2><p className="mt-6 max-w-xl text-base leading-7 text-white/60">India’s polar research creates knowledge for many audiences. POLARIS is the connective tissue between the source record, the curious student, the researcher looking for context and the outreach team shaping the next story.</p><div className="mt-10 grid gap-3 sm:grid-cols-3"><div className="rounded-2xl border border-white/10 bg-white/5 p-4"><Database className="h-5 w-5 text-cyan-200" /><p className="mt-7 text-sm font-semibold">Archive</p></div><div className="rounded-2xl border border-white/10 bg-white/5 p-4"><GraduationCap className="h-5 w-5 text-cyan-200" /><p className="mt-7 text-sm font-semibold">Explain</p></div><div className="rounded-2xl border border-white/10 bg-white/5 p-4"><Radio className="h-5 w-5 text-cyan-200" /><p className="mt-7 text-sm font-semibold">Share</p></div></div></article><div className="grid gap-5"><InfoTile label="Audience one" value="Researchers & teams" /><InfoTile label="Audience two" value="Students & educators" /><InfoTile label="Audience three" value="Public & media" /></div></div><div className="mt-10 grid gap-5 md:grid-cols-3"><InfoBlock id="provenance" icon={<FileText />} title="Content provenance" text="Seeded records in this prototype are illustrative. In production, every answer and story will link to a verified institutional source." /><InfoBlock id="accessibility" icon={<Layers3 />} title="Designed for access" text="POLARIS is designed with keyboard navigation, readable contrast and reduced-motion preferences in mind." /><InfoBlock id="contact" icon={<MessageCircle />} title="Built to grow" text="For institutional contributions, corrections or outreach partnerships, connect with the NCPOR knowledge team." /></div></div></main><Footer /></>;
+}
+
+function InfoBlock({ id, icon, title, text }: { id: string; icon: React.ReactNode; title: string; text: string }) { return <section id={id} className="rounded-[1.5rem] border border-[#dbe7ec] bg-white p-6"><span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-50 text-cyan-700">{icon}</span><h2 className="mt-8 font-display text-2xl font-semibold tracking-[-0.05em] text-[#102333]">{title}</h2><p className={cx("mt-3", bodyCopyClass)}>{text}</p></section>; }
+
+function NotFound() { return <><Header /><main className="grid min-h-screen place-items-center bg-[#f4f8fb] px-5 pt-20"><div className="max-w-lg text-center"><p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-700">404 · Off the map</p><h1 className="mt-5 font-display text-5xl font-semibold tracking-[-0.07em] text-[#102333]">This polar coordinate is off the map.</h1><p className={cx("mt-5", bodyCopyClass)}>Use the navigation to return to the knowledge atlas.</p><Link href="/" className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#102333] px-5 py-3 text-sm font-semibold text-white">Return home <ArrowUpRight className="h-4 w-4" /></Link></div></main><Footer /></>; }
 
 function App() {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
+  useEffect(() => { document.title = "POLARIS — Polar knowledge, made human."; }, []);
+  return <Switch><Route path="/" component={Home} /><Route path="/repository" component={Repository} /><Route path="/repository/:id">{(params) => <RepositoryDetail id={params.id} />}</Route><Route path="/assistant" component={Assistant} /><Route path="/learn" component={Learn} /><Route path="/learn/:id/quiz">{(params) => <Quiz id={params.id} />}</Route><Route path="/learn/:id">{(params) => <TopicDetail id={params.id} />}</Route><Route path="/explorer" component={Explorer} /><Route path="/media" component={Media} /><Route path="/studio" component={Studio} /><Route path="/about" component={About} /><Route component={NotFound} /></Switch>;
 }
 
 export default App;
