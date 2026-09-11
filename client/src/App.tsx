@@ -165,7 +165,7 @@ function SearchField({ value, onChange, onSubmit, placeholder = "Search reports,
   </form>;
 }
 
-function Tag({ children, className }: { children: React.ReactNode; className?: string }) { return <span className={cx("inline-flex items-center text-[10px] font-bold uppercase tracking-[0.14em] text-current/75", className)}><span className="font-display italic normal-case tracking-[-0.01em]">{children}</span></span>; }
+function Tag({ children, className }: { children: React.ReactNode; className?: string }) { return <span className={cx("inline-flex items-baseline gap-2 text-current/70", className)}><span className="text-[8px] font-bold uppercase tracking-[0.22em] opacity-45">Type</span><span className="font-display text-[12px] font-semibold tracking-[-0.01em]">{children}</span></span>; }
 
 function RecordCard({ item, saved, onSave, compact = false }: { item: (typeof repositoryItems)[number]; saved?: boolean; onSave?: () => void; compact?: boolean }) {
   return <article className={cx("group relative overflow-hidden rounded-[1.5rem] border border-[#dbe7ec] bg-white transition duration-300 hover:-translate-y-1 hover:border-cyan-200", shadowCard, compact ? "p-5" : "p-6")}>
