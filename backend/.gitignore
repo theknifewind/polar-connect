@@ -1,0 +1,11 @@
+# environment variables for backend
+.env
+.env.example
+
+#Database
+polar_connect.db
+
+# Storage
+uploads/
+chromadb_data/
+

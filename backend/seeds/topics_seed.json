@@ -1,0 +1,76 @@
+{
+  "topics": [
+    {
+      "id": "polar-101",
+      "title": "Polar Science 101",
+      "tag": "Start here",
+      "description": "The essentials of ice, oceans, climate and polar fieldwork.",
+      "color": "cyan",
+      "questions": [
+        { "id": "q-p101-1", "question": "Which Indian station is located in the Arctic?", "options": ["Maitri", "Bharati", "Himadri", "Dakshin Gangotri"], "correct_answer_index": 2, "explanation": "Himadri is India's Arctic research station, located in Ny-Ålesund, Svalbard. Maitri and Bharati are both in Antarctica.", "sort_order": 0 },
+        { "id": "q-p101-2", "question": "What does glaciology study?", "options": ["Clouds", "Ice and glaciers", "Deep ocean fish", "Auroras"], "correct_answer_index": 1, "explanation": "Glaciology is the scientific study of glaciers, ice sheets, and ice in general — how they form, move, and respond to climate changes.", "sort_order": 1 },
+        { "id": "q-p101-3", "question": "Why are polar regions important to climate science?", "options": ["They have no weather", "They store signals of Earth's climate", "They are closest to the Sun", "They never change"], "correct_answer_index": 1, "explanation": "Polar ice cores, sediments, and ocean records preserve signals of Earth's past and present climate, making polar regions critical natural archives.", "sort_order": 2 }
+      ]
+    },
+    {
+      "id": "antarctica-arctic",
+      "title": "Antarctica vs Arctic",
+      "tag": "Compare",
+      "description": "Two poles, two systems, one connected planet.",
+      "color": "indigo",
+      "questions": [
+        { "id": "q-aa-1", "question": "What is the main difference between the Arctic and Antarctica?", "options": ["The Arctic is colder", "Antarctica is a continent, the Arctic is an ocean", "They are the same", "The Arctic has more ice"], "correct_answer_index": 1, "explanation": "Antarctica is a land continent covered by ice, while the Arctic is primarily an ocean surrounded by land.", "sort_order": 0 },
+        { "id": "q-aa-2", "question": "Which polar region has penguins?", "options": ["Arctic", "Both", "Antarctica", "Neither"], "correct_answer_index": 2, "explanation": "Penguins are found only in the Southern Hemisphere, primarily in and around Antarctica.", "sort_order": 1 },
+        { "id": "q-aa-3", "question": "What connects Arctic and Antarctic climate systems?", "options": ["Nothing", "Ocean circulation patterns", "Underground tunnels", "Satellite signals"], "correct_answer_index": 1, "explanation": "Global ocean circulation, including deep thermohaline circulation, connects the polar regions and influences climate patterns worldwide.", "sort_order": 2 }
+      ]
+    },
+    {
+      "id": "climate",
+      "title": "Climate change",
+      "tag": "Explore",
+      "description": "Read the signals recorded in ice, air and ocean.",
+      "color": "emerald",
+      "questions": [
+        { "id": "q-cc-1", "question": "What can ice cores tell us about past climate?", "options": ["Nothing useful", "Temperature and atmospheric composition over millennia", "Only recent weather", "Earthquake data"], "correct_answer_index": 1, "explanation": "Ice cores trap air bubbles from past atmospheres, allowing scientists to reconstruct temperature and CO₂ levels going back hundreds of thousands of years.", "sort_order": 0 },
+        { "id": "q-cc-2", "question": "Why is polar ice melting a global concern?", "options": ["It only affects polar bears", "It contributes to sea level rise", "It has no wider impact", "It creates more freshwater for drinking"], "correct_answer_index": 1, "explanation": "Melting polar ice contributes directly to global sea level rise, threatening coastal communities, and alters ocean circulation patterns.", "sort_order": 1 },
+        { "id": "q-cc-3", "question": "What is the albedo effect in polar regions?", "options": ["A type of aurora", "Ice and snow reflecting sunlight back to space", "Ocean warming", "Wind patterns"], "correct_answer_index": 1, "explanation": "The albedo effect refers to ice and snow reflecting solar radiation. As ice melts, darker surfaces absorb more heat, creating a feedback loop.", "sort_order": 2 }
+      ]
+    },
+    {
+      "id": "glaciology",
+      "title": "Glaciology",
+      "tag": "Deep dive",
+      "description": "How glaciers move, melt and remember climate.",
+      "color": "sky",
+      "questions": [
+        { "id": "q-gl-1", "question": "How do glaciers move?", "options": ["They don't move", "Internal deformation and basal sliding", "Wind pushes them", "Earthquakes shift them"], "correct_answer_index": 1, "explanation": "Glaciers move through internal deformation (ice crystals deforming under pressure) and basal sliding (the glacier sliding over bedrock).", "sort_order": 0 },
+        { "id": "q-gl-2", "question": "What is a calving event?", "options": ["A baby glacier forming", "Ice breaking off a glacier into the ocean", "Snow melting in spring", "A measurement technique"], "correct_answer_index": 1, "explanation": "Calving is the process where chunks of ice break off the terminus of a glacier or ice shelf and fall into the ocean, forming icebergs.", "sort_order": 1 },
+        { "id": "q-gl-3", "question": "What does the mass balance of a glacier measure?", "options": ["Its weight on a scale", "The difference between snow accumulation and ice loss", "Its age", "Its colour"], "correct_answer_index": 1, "explanation": "Mass balance compares how much snow/ice a glacier gains versus loses. A negative balance means the glacier is shrinking.", "sort_order": 2 }
+      ]
+    },
+    {
+      "id": "oceans",
+      "title": "Polar oceans",
+      "tag": "Explore",
+      "description": "Currents, carbon and the ocean around the ice.",
+      "color": "teal",
+      "questions": [
+        { "id": "q-po-1", "question": "Why is the Southern Ocean important for global climate?", "options": ["It's the warmest ocean", "It absorbs significant CO₂ and drives deep ocean circulation", "It has no climate role", "It generates most hurricanes"], "correct_answer_index": 1, "explanation": "The Southern Ocean absorbs a disproportionate amount of atmospheric CO₂ and heat, and its dense cold waters drive global thermohaline circulation.", "sort_order": 0 },
+        { "id": "q-po-2", "question": "What is thermohaline circulation?", "options": ["A type of whale migration", "Global ocean circulation driven by temperature and salinity differences", "Tidal patterns", "Underwater volcanic activity"], "correct_answer_index": 1, "explanation": "Thermohaline circulation is a global system of deep ocean currents driven by differences in water density due to temperature and salinity.", "sort_order": 1 },
+        { "id": "q-po-3", "question": "What lives beneath Antarctic sea ice?", "options": ["Nothing", "A rich ecosystem including krill, algae, and fish", "Only bacteria", "Tropical fish"], "correct_answer_index": 1, "explanation": "The underside of Antarctic sea ice supports a rich ecosystem: algae grows on the ice, feeding krill, which supports fish, seals, and whales.", "sort_order": 2 }
+      ]
+    },
+    {
+      "id": "stations",
+      "title": "India's stations",
+      "tag": "Field notes",
+      "description": "Meet Maitri, Bharati and Himadri.",
+      "color": "amber",
+      "questions": [
+        { "id": "q-st-1", "question": "When was India's first Antarctic station, Dakshin Gangotri, established?", "options": ["1994", "1983", "2001", "1975"], "correct_answer_index": 1, "explanation": "Dakshin Gangotri was established in 1983 during India's first Antarctic expedition. It was later buried by ice and replaced by Maitri in 1989.", "sort_order": 0 },
+        { "id": "q-st-2", "question": "What type of research does Bharati station primarily support?", "options": ["Space exploration", "Ocean, climate, life and earth sciences", "Military operations", "Mining"], "correct_answer_index": 1, "explanation": "Bharati, established in 2012, is designed for multi-disciplinary research across ocean, climate, life, and earth sciences.", "sort_order": 1 },
+        { "id": "q-st-3", "question": "Where is India's Arctic station Himadri located?", "options": ["Iceland", "Greenland", "Ny-Ålesund, Svalbard", "Alaska"], "correct_answer_index": 2, "explanation": "Himadri is located in Ny-Ålesund, Svalbard (Norway), one of the northernmost research settlements in the world at 79°N.", "sort_order": 2 }
+      ]
+    }
+  ]
+}
