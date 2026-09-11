@@ -1,0 +1,38 @@
+[
+  {
+    "id": "maitri",
+    "name": "Maitri",
+    "region": "Schirmacher Oasis, Antarctica",
+    "established": "1989",
+    "number": "01",
+    "description": "India's second permanent Antarctic station, supporting atmospheric, glaciological, geological and biological research.",
+    "facts": ["71°45′S · 11°44′E", "Summer + winter operations", "Polar earth sciences"],
+    "color": "cyan",
+    "map_x": "43%",
+    "map_y": "58%"
+  },
+  {
+    "id": "bharati",
+    "name": "Bharati",
+    "region": "Larsemann Hills, Antarctica",
+    "established": "2012",
+    "number": "02",
+    "description": "A modern coastal station enabling research across ocean, climate, life and earth science disciplines.",
+    "facts": ["69°24′S · 76°11′E", "Coastal research base", "Ocean & climate"],
+    "color": "amber",
+    "map_x": "67%",
+    "map_y": "42%"
+  },
+  {
+    "id": "himadri",
+    "name": "Himadri",
+    "region": "Ny-Ålesund, Svalbard",
+    "established": "2008",
+    "number": "03",
+    "description": "India's Arctic research station, opening a window into sea ice, glaciers and high-latitude climate processes.",
+    "facts": ["79°N · 11°E", "Arctic summer research", "Cryosphere studies"],
+    "color": "violet",
+    "map_x": "78%",
+    "map_y": "17%"
+  }
+]

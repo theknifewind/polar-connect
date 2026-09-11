@@ -1,0 +1,34 @@
+[
+  {
+    "id": "m1",
+    "type": "Field note",
+    "eyebrow": "Antarctica · 08 min",
+    "title": "A day in the field at Maitri",
+    "summary": "From first light to the evening weather log, follow a day shaped by wind, ice and teamwork.",
+    "gradient": "from-cyan-950 via-sky-900 to-slate-800"
+  },
+  {
+    "id": "m2",
+    "type": "Video",
+    "eyebrow": "Bharati · 04:18",
+    "title": "Inside India's coastal polar laboratory",
+    "summary": "A visual introduction to the systems and people that keep Bharati moving.",
+    "gradient": "from-amber-950 via-orange-900 to-slate-800"
+  },
+  {
+    "id": "m3",
+    "type": "Photo essay",
+    "eyebrow": "Fieldwork · 18 images",
+    "title": "Blue ice, long shadows",
+    "summary": "A quiet collection of textures, horizons and patterns from a summer traverse.",
+    "gradient": "from-indigo-950 via-blue-900 to-slate-800"
+  },
+  {
+    "id": "m4",
+    "type": "News",
+    "eyebrow": "Arctic · 05 min",
+    "title": "What the Arctic is teaching us about monsoons",
+    "summary": "New observations prompt a closer look at the links between high latitudes and India's weather.",
+    "gradient": "from-violet-950 via-fuchsia-900 to-slate-800"
+  }
+]
